@@ -1,0 +1,36 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
+        "react-app",
+        "plugin:react/recommended", // Uses the recommended rules from @eslint-plugin-react
+        "plugin:@typescript-eslint/recommended", // Uses the recommended rules
+        "prettier/@typescript-eslint", // added prettier
+        "plugin:prettier/recommended",
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parser": "@typescript-eslint/parser", // Specifies the ESLint parser
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint",
+        "prettier"
+    ],
+    "rules": {
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "react/prop-types": "warn",
+        "react/no-unescaped-entities": "warn",
+        "react/jsx-pascal-case": "off", // Prevents errors with Theme-UI and Styled component
+    }
+}
