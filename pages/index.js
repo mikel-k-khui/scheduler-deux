@@ -1,6 +1,8 @@
 import React from 'react'
 import Head from 'next/head'
-import ButtonAppBar from '../components/ButtonAppBar'
+import Header from '../components/Header'
+import Subheader from '../components/Subheader'
+import Layout from '../components/Layout'
 
 export default function Home() {
   return (
@@ -8,7 +10,9 @@ export default function Home() {
       <Head>
         <title>Slottable</title>
       </Head>
-      <ButtonAppBar />
+      <Header />
+      <Subheader />
+      <Layout />
     </div>
   )
 }

@@ -4,31 +4,40 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
+  login: {
+    marginRight: '16px',
   },
   title: {
     flexGrow: 1,
   },
+  toolbar: {
+    minHeight: '12vh',
+  },
 }))
 
-export default function ButtonAppBar() {
+export default function Header() {
   const classes = useStyles()
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
+        <Toolbar className={classes.toolbar}>
+          <Typography variant="h5" className={classes.title}>
             Slottable
           </Typography>
-          <Button color="inherit">Login</Button>
-          <Button color="inherit">Sign Up</Button>
+          <Button color="inherit" className={classes.login}>
+            <AccountCircleIcon style={{ marginRight: '8px' }} />
+            Login
+          </Button>
+          <Button variant="contained" color="secondary">
+            Sign Up
+          </Button>
         </Toolbar>
       </AppBar>
     </div>
