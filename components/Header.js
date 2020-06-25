@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1,
+    fontWeight: '300',
   },
   toolbar: {
     minHeight: '12vh',
@@ -28,14 +29,14 @@ export default function Header() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar className={classes.toolbar}>
-          <Typography variant="h5" className={classes.title}>
-            Slottable
+          <Typography variant="h4" className={classes.title}>
+            Scheduler 2.0
           </Typography>
           <Button color="inherit" className={classes.login}>
             <AccountCircleIcon style={{ marginRight: '8px' }} />
             Login
           </Button>
-          <Button variant="contained" color="secondary">
+          <Button variant="outlined" color="inherit">
             Sign Up
           </Button>
         </Toolbar>

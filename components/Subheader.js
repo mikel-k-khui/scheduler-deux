@@ -20,16 +20,15 @@ const useStyles = makeStyles(() => ({
   toolbar: {
     minHeight: '6vh',
     backgroundColor: '#5c5c5c',
-    textAlign: 'center',
     color: '#FFF',
   },
 }))
 
 function SimpleDialog(props) {
-  const { onClose, selectedValue, open } = props
+  const { onClose, open } = props
 
   const handleClose = () => {
-    onClose(selectedValue)
+    onClose()
   }
 
   const [state, setState] = useState({ date: new Date() })
@@ -61,7 +60,6 @@ SimpleDialog.propTypes = {
 export default function Subheader() {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
-  const [selectedValue, setSelectedValue] = React.useState(emails[1])
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -69,7 +67,6 @@ export default function Subheader() {
 
   const handleClose = value => {
     setOpen(false)
-    setSelectedValue(value)
   }
 
   return (
@@ -79,23 +76,19 @@ export default function Subheader() {
           <Grid item sm={2}>
             <Sidebar />
           </Grid>
-          <Grid item sm={8}>
+          <Grid item sm={8} style={{ textAlign: 'center' }}>
             <Button color="inherit">
               <KeyboardArrowLeftIcon />
             </Button>
             <Button color="inherit" onClick={handleClickOpen}>
               Monday, June 22
             </Button>
-            <SimpleDialog
-              selectedValue={selectedValue}
-              open={open}
-              onClose={handleClose}
-            />
+            <SimpleDialog open={open} onClose={handleClose} />
             <Button color="inherit">
               <KeyboardArrowRightIcon />
             </Button>
           </Grid>
-          <Grid item sm={2}>
+          <Grid item sm={2} style={{ textAlign: 'right' }}>
             <Button color="inherit">Weekly</Button>
           </Grid>
         </Grid>
