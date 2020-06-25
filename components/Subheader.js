@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import Sidebar from './Sidebar'
+import Calendar from 'react-calendar'
 
 const useStyles = makeStyles(theme => ({
   root: {
