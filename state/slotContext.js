@@ -1,47 +1,56 @@
-// import { createContext, useReducer } from 'react'
-// import {
-//   SET_DATE,
-//   ADD_FILTER,
-//   CLEAR_FILTER,
-//   DAILY_VIEW,
-//   WEEKLY_VIEW,
-// } from './constant'
+import { createContext, useReducer, useContext } from 'react'
+import {
+  SET_DATE,
+  ADD_FILTER,
+  CLEAR_FILTER,
+  DAILY_VIEW,
+  WEEKLY_VIEW,
+} from './constant'
 
-// const slotsInitialState = {
-//   dateDisplayed: new Date(),
-//   resourceFilter: null,
-//   view: 'DAILY',
+// export interface slotsState {
+//   dateDisplayed: Date
+//   resourceFilter: null | string
+//   view: 'DAILY' | 'WEEKLY'
 // }
 
-// function slotsReducer(state, { type, payload }) {
-//   const types = {
-//     [SET_DATE]: { ...state, dateDisplayed: payload.dateDisplayed },
-//     [ADD_FILTER]: (state, payload) => ({
-//       ...state,
-//       resourceFilter: payload.resourceFilter,
-//     }),
-//     [CLEAR_FILTER]: (state, payload) =>
-//       state.resourceFilter && { ...state, resourceFilter: null },
-//     [DAILY_VIEW]: { ...state, view: 'DAILY' },
-//     [WEEKLY_VIEW]: { ...state, view: 'WEEKLY' },
-//   }
+const slotsInitialState = {
+  dateDisplayed: new Date(),
+  resourceFilter: null,
+  view: 'DAILY',
+}
 
-//   return types[type]
-// }
+function slotsReducer(state, { type, payload }) {
+  const types = {
+    [SET_DATE]: { ...state, dateDisplayed: payload.dateDisplayed },
+    [ADD_FILTER]: (state, payload) => ({
+      ...state,
+      resourceFilter: payload.resourceFilter,
+    }),
+    [CLEAR_FILTER]: (state, payload) =>
+      state.resourceFilter && { ...state, resourceFilter: null },
+    [DAILY_VIEW]: { ...state, view: 'DAILY' },
+    [WEEKLY_VIEW]: { ...state, view: 'WEEKLY' },
+  }
 
-// // example of use slotDispatcher(slotOptions, { type: SET_DATE, dateDisplayed: date })
-// const [slotsOptions, slotsDispatcher] = useReducer(slotsReducer, slotsInitialState)
+  return types[type]
+}
 
-// const slotsContext = createContext([slotsOptions, slotsDispatcher])
+export const slotsContext = createContext()
 
-// const { Provider, Consumer } = slotsContext
+function slotsProvider(props) {
+  // example of use slotDispatcher(slotOptions, { type: SET_DATE, dateDisplayed: date })
+  /* eslint react-hooks/rules-of-hooks: 1 */
+  const { Provider } = slotsContext
+  const [slotsOptions, slotsDispatcher] = useReducer(
+    slotsReducer,
+    slotsInitialState
+  )
+  /* eslint react/react-in-jsx-scope: 1*/
+  return <Provider value={{ slotsOptions, slotsDispatcher }} {...props} />
+}
 
-// function slotsProvider(children) {
-//   return <Provider value={[slotsOptions, slotsDispatcher]}>{children}</Provider>
-// }
+function useSlotsContext() {
+  return useContext(slotsContext)
+}
 
-// function slotsConsumer(children) {
-//   return <Consumer>{children}</Consumer>
-// }
-
-// export { slotsConsumer, slotsProvider }
+export { slotsProvider, useSlotsContext }
