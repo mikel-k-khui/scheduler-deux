@@ -20,9 +20,9 @@ export default function Home(props) {
         <title>Scheduler 2.0</title>
       </Head>
       <Header />
-      <Subheader />
-      <Layout>
-        <Daily />
+      <Subheader props={props} />
+      <Layout props={props}>
+        <Daily props={props} />
       </Layout>
     </div>
   )
