@@ -11,6 +11,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import Dialog from '@material-ui/core/Dialog'
 import Calendar from 'react-calendar'
 import Grid from '@material-ui/core/Grid'
+import { toggleViews, useSlotsContext } from '../state/slots'
 
 const emails = ['username@gmail.com', 'user02@gmail.com']
 const useStyles = makeStyles(() => ({
@@ -46,7 +47,7 @@ function SimpleDialog(props) {
       <DialogTitle id="simple-dialog-title" style={{ textAlign: 'center' }}>
         Select a date
       </DialogTitle>
-      <Calendar onChange={onChange} value={state.date} />
+      <Calendar onChange={onChange} value={state.date} minDate={new Date()} />
     </Dialog>
   )
 }
@@ -54,7 +55,7 @@ function SimpleDialog(props) {
 SimpleDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  selectedValue: PropTypes.string.isRequired,
+  // selectedValue: PropTypes.string.isRequired,
 }
 
 export default function Subheader() {
@@ -69,6 +70,9 @@ export default function Subheader() {
     setOpen(false)
   }
 
+  const { slotsOptions, slotsDispatcher } = useSlotsContext()
+  const { view } = slotsOptions
+  console.debug('DEBUG :: before Subheaders :: options:', slotsOptions)
   return (
     <div className={classes.root}>
       <Toolbar className={classes.toolbar}>
@@ -81,7 +85,7 @@ export default function Subheader() {
               <KeyboardArrowLeftIcon />
             </Button>
             <Button color="inherit" onClick={handleClickOpen}>
-              Monday, June 22
+              {slotsOptions.dateDisplayed.toDateString()}
             </Button>
             <SimpleDialog open={open} onClose={handleClose} />
             <Button color="inherit">
@@ -89,7 +93,14 @@ export default function Subheader() {
             </Button>
           </Grid>
           <Grid item sm={2} style={{ textAlign: 'right' }}>
-            <Button color="inherit">Weekly</Button>
+            <Button
+              color="inherit"
+              onClick={() => {
+                slotsDispatcher(toggleViews(view))
+              }}
+            >
+              {view}
+            </Button>
           </Grid>
         </Grid>
       </Toolbar>

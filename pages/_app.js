@@ -4,6 +4,7 @@ import Head from 'next/head'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { theme } from '../components'
+import { SlotsProvider } from '../state/slots'
 import 'react-calendar/dist/Calendar.css'
 
 export default function MyApp(props) {
@@ -29,7 +30,9 @@ export default function MyApp(props) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Component {...pageProps} />
+        <SlotsProvider>
+          <Component {...pageProps} />
+        </SlotsProvider>
       </ThemeProvider>
     </React.Fragment>
   )
