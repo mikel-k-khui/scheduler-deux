@@ -7,9 +7,14 @@ import { theme } from '../components'
 import { SlotsProvider } from '../state/slots'
 import 'react-calendar/dist/Calendar.css'
 
-export default function MyApp(props) {
-  const { Component, pageProps } = props
+// measure  TTFB, FCP, LCP, FID, and CLS
+// export function reportWebVitals(metric) {
+//   if (metric.label === 'web-vital') {
+//     console.log('PERFORMANCE :: ', metric) // The metric object ({ id, name, startTime, value, label }) is logged to the console
+//   }
+// }
 
+export default function MyApp({ Component, pageProps }) {
   React.useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side')
