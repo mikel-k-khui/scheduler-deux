@@ -26,6 +26,7 @@ export default function Daily(props) {
 
   return (
     <List className={classes.root} aria-label="daily view">
+      {props.date}
       <ListItem className={classes.item}>
         <ListItemText primary="9am" />
       </ListItem>

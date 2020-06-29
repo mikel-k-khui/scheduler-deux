@@ -8,8 +8,11 @@ export default function Layout(props) {
   const { slotsOptions, slotsDispatcher } = useSlotsContext()
   const { dateDisplayed, resourceFilter, view } = slotsOptions
   const { resources, slots, appointments } = props
+  const tomorrow = new Date()
+  tomorrow.setDate(dateDisplayed.getDate() + 1)
 
-  return {}
+  const weekList = [dateDisplayed, tomorrow].map(date => DailyContainer(date))
+  return { weekList }
 }
 
 function DailyContainer(props) {
