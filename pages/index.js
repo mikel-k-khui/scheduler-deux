@@ -13,6 +13,8 @@ import {
 import firebase from 'firebase'
 
 export default function Home(props) {
+  // check if firebase works after build. This function will not re-initialize.
+  firebaseInitialize()
   console.log('Start of props', props)
   return (
     <div>
@@ -36,6 +38,7 @@ const tempSlots = {
 }
 
 export async function getStaticProps() {
+  // initialize firebase in build to pull initial data
   firebaseInitialize()
   let setups = await getCallable(GET_SETUPS)
   let appointments = await getCallable(GET_APPOINTMENTS)
