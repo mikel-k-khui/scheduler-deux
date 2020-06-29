@@ -58,7 +58,7 @@ export async function getStaticProps() {
       },
     ],
   }
-  const testDate = new Date(2020, 5, 30)
+  const testDate = new Date()
   appointments = [
     {
       date: testDate.toJSON(),
