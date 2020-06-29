@@ -8,12 +8,10 @@ import { useSlotsContext, WEEKLY_VIEW } from '../state/slots'
 export default function Layout({ props }) {
   const { slotsOptions, slotsDispatcher } = useSlotsContext()
   const { dateDisplayed, resourceFilter, view } = slotsOptions
-  const tomorrow = new Date()
-  tomorrow.setDate(dateDisplayed.getDate() + 1)
 
   // returns an array of DAILY DOM with containers
   const weekList =
-    view !== WEEKLY_VIEW
+    view === WEEKLY_VIEW
       ? getWeekDates(dateDisplayed).map((date, index) =>
           DailyContainer({ ...props, date }, `daily-container-${index}`)
         )

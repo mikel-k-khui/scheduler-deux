@@ -79,7 +79,7 @@ export default function Daily({ props }) {
 }
 
 function openAppModal(slot, date) {
-  console.log('You clicked ')
+  console.log('You clicked on', date, 'in slot', slot)
 }
 
 function getDailySlots(appointments, resources, slots, date) {
@@ -93,7 +93,7 @@ function getDailySlots(appointments, resources, slots, date) {
           return resource.workHours[slot] ? (
             <Chip
               label={resource.displayName}
-              onClick={openAppModal(slot, date, resource.id)}
+              onClick={() => openAppModal(slot, date, resource.id)}
             />
           ) : (
             <Chip label={resource.displayName} disabled />
