@@ -5,14 +5,20 @@ import Container from '@material-ui/core/Container'
 import Daily from '../components/Daily'
 import { useSlotsContext, WEEKLY_VIEW } from '../state/slots'
 
-export default function Layout(props) {
+export default function Layout({ props }) {
   const { slotsOptions, slotsDispatcher } = useSlotsContext()
   const { dateDisplayed, resourceFilter, view } = slotsOptions
   const tomorrow = new Date()
   tomorrow.setDate(dateDisplayed.getDate() + 1)
 
-  const weekList = view === WEEKLY_VIEW ? getWeekDates : [dateDisplayed]
-  return <div> {weekList}</div>
+  // returns an array of DAILY DOM with containers
+  const weekList =
+    view !== WEEKLY_VIEW
+      ? getWeekDates(dateDisplayed).map((date, index) =>
+          DailyContainer({ ...props, date }, `daily-container-${index}`)
+        )
+      : [DailyContainer({ ...props, date: dateDisplayed }, 'daily-container-0')]
+  return <> {weekList}</>
 }
 
 /*
@@ -22,13 +28,16 @@ export default function Layout(props) {
  */
 
 function getWeekDates(dateSelected) {
-  const weekDays = new Array(5)
-  return weekDays.map((noValue, index) => startOfWeek(dateSelected, index + 1))
+  const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+
+  return weekDays.map((day, index) =>
+    startOfWeek(dateSelected, { weekStartsOn: index + 1 })
+  )
 }
 
-function DailyContainer(props) {
+function DailyContainer(props, key) {
   return (
-    <React.Fragment>
+    <React.Fragment key={key}>
       <CssBaseline />
       <Container maxWidth="lg" style={{ margin: '0 auto' }}>
         <Daily props={props} />

@@ -22,8 +22,8 @@ export default function Home(props) {
         <title>Scheduler 2.0</title>
       </Head>
       <Header />
-      <Subheader props={props} />
-      <Layout props={props} />
+      <Subheader props={{ ...props }} />
+      <Layout props={{ ...props }} />
     </div>
   )
 }
