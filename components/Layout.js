@@ -1,18 +1,29 @@
 import React from 'react'
+import { startOfWeek } from 'date-fns'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Container from '@material-ui/core/Container'
 import Daily from '../components/Daily'
-import { useSlotsContext } from '../state/slots'
+import { useSlotsContext, WEEKLY_VIEW } from '../state/slots'
 
 export default function Layout(props) {
   const { slotsOptions, slotsDispatcher } = useSlotsContext()
   const { dateDisplayed, resourceFilter, view } = slotsOptions
-  const { resources, slots, appointments } = props
   const tomorrow = new Date()
   tomorrow.setDate(dateDisplayed.getDate() + 1)
 
-  const weekList = [dateDisplayed, tomorrow].map(date => DailyContainer(date))
-  return { weekList }
+  const weekList = view === WEEKLY_VIEW ? getWeekDates : [dateDisplayed]
+  return <div> {weekList}</div>
+}
+
+/*
+ * Creates an array of 5 then iterate through starting with Monday by setting
+ * by setting startOfWeek to Monday, then again for Tuesday until Friday.
+ * @dateSelected any day of the week
+ */
+
+function getWeekDates(dateSelected) {
+  const weekDays = new Array(5)
+  return weekDays.map((noValue, index) => startOfWeek(dateSelected, index + 1))
 }
 
 function DailyContainer(props) {
