@@ -4,6 +4,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Divider from '@material-ui/core/Divider'
+import { useSlotsContext } from '../state/slots'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,8 +17,12 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function Daily() {
+export default function Daily(props) {
   const classes = useStyles()
+
+  const { slotsOptions, slotsDispatcher } = useSlotsContext()
+  const { dateDisplayed, resourceFilter, view } = slotsOptions
+  const { resources, slots, appointments } = props
 
   return (
     <List className={classes.root} aria-label="daily view">

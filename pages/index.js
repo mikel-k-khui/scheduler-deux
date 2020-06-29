@@ -23,9 +23,7 @@ export default function Home(props) {
       </Head>
       <Header />
       <Subheader props={props} />
-      <Layout props={props}>
-        <Daily props={props} />
-      </Layout>
+      <Layout props={props} />
     </div>
   )
 }
