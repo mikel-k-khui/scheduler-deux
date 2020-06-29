@@ -15,6 +15,7 @@ export function firebaseInitialize() {
 
   try {
     app()
+    console.log(`FIREBASE :: APP EXISTS...`)
   } catch (err) {
     console.log('FIREBASE :: INITIALIZE_APP...')
     return firebase.initializeApp(firebaseConfig)
