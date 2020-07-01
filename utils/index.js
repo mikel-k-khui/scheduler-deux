@@ -6,11 +6,14 @@ export {
   GET_SETUPS,
 } from './constant'
 
-export { errorMessage } from './common'
+export { errorMessage, logger } from './common'
 
 export {
   firebaseAnonSignIn,
   firebaseUserSignIn,
   firebaseInitialize,
   getCallable,
+  getUser,
+  getUserId,
+  isUserAnonymous,
 } from './firebase'

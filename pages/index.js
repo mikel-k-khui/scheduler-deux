@@ -5,17 +5,21 @@ import Subheader from '../components/Subheader'
 import Layout from '../components/Layout'
 import Daily from '../components/Daily'
 import {
+  firebaseAnonSignIn,
   firebaseInitialize,
   getCallable,
   GET_SETUPS,
   GET_APPOINTMENTS,
+  getUserId,
+  isUserAnonymous,
 } from '../utils'
-import firebase from 'firebase'
+import firebase, { auth } from 'firebase'
 
 export default function Home(props) {
   // check if firebase works after build. This function will not re-initialize.
   firebaseInitialize()
-  console.log('Start of props', props)
+
+  console.log('Start of props and user', isUserAnonymous(), getUserId(), props)
   return (
     <div>
       <Head>
@@ -42,6 +46,7 @@ export async function getStaticProps() {
   firebaseInitialize()
   let setups = await getCallable(GET_SETUPS)
   let appointments = await getCallable(GET_APPOINTMENTS)
+  await firebaseAnonSignIn()
 
   setups = {
     slots: { ...tempSlots },
