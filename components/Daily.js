@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Button,
@@ -7,10 +7,6 @@ import {
   Chip,
   Collapse,
   Divider,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
   TextField,
   Typography,
 } from '@material-ui/core'
@@ -20,11 +16,27 @@ import { app } from 'firebase'
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    height: '100vh',
     backgroundColor: theme.palette.background.paper,
+    justifyContent: 'space-around',
+  },
+  card: {
+    minHeight: '90px',
+  },
+  inputBox: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  form: {
+    paddingBottom: '10px',
+    paddingTop: '5px',
+    width: '100%',
   },
   item: {
     minHeight: '100px',
+  },
+  formButton: {
+    paddingLeft: '10px',
   },
 }))
 
@@ -51,109 +63,92 @@ export default function Daily({ props }) {
     todayBookedSlots,
     filteredResources,
     slots,
-    date
+    date,
+    classes
   )
 
   return (
     <>
-      <Typography variant="h5" component="h2">
+      <Typography className={classes.root} variant="h5" component="h2">
         {props.date.toDateString()}
       </Typography>
       <>{dailySlots}</>
     </>
-    // <List className={classes.root} aria-label="daily view">
-    //   <ListItem className={classes.item}>
-    //     <ListItemText primary="9am" />
-    //   </ListItem>
-    //   <Divider />
-    //   <ListItem className={classes.item}>
-    //     <ListItemText primary="10am" />
-    //   </ListItem>
-    //   <Divider />
-    //   <ListItem className={classes.item}>
-    //     <ListItemText primary="11am" />
-    //   </ListItem>
-    //   <Divider />
-    //   <ListItem className={classes.item}>
-    //     <ListItemText primary="12pm" />
-    //   </ListItem>
-    //   <Divider />
-    //   <ListItem className={classes.item}>
-    //     <ListItemText primary="1pm" />
-    //   </ListItem>
-    //   <Divider />
-    //   <ListItem className={classes.item}>
-    //     <ListItemText primary="2pm" />
-    //   </ListItem>
-    //   <Divider />
-    //   <ListItem className={classes.item}>
-    //     <ListItemText primary="3pm" />
-    //   </ListItem>
-    //   <Divider />
-    //   <ListItem className={classes.item}>
-    //     <ListItemText primary="4pm" />
-    //   </ListItem>
-    //   <Divider />
-    //   <ListItem className={classes.item}>
-    //     <ListItemText primary="5pm" />
-    //   </ListItem>
-    // </List>
   )
 }
 
-function openAppModal(slot, date) {
-  console.log('You clicked on', date, 'in slot', slot)
-}
-
-function getDailySlots(bookedSlots, resources, slots, date) {
+function getDailySlots(bookedSlots, resources, slots, date, classes) {
   return Object.entries(slots).map(([slot, slotTime]) => {
-    const [expanded, setExpanded] = React.useState(false)
-    const toggleCollapse = () => setExpanded(!expanded)
+    const initialState = {
+      expanded: false,
+      resource: '',
+    }
+    const [selected, setSelected] = useState(initialState)
+    const toggleCollapse = () => setSelected(initialState)
+    const openForm = resource => setSelected({ expanded: true, resource })
     const disableCard = bookedSlots.includes(slot)
+
     return (
-      <Card key={`${date.toDateString()}-${slot}`}>
-        <Typography variant="h5" component="h2">
+      <Card
+        key={`${date.toDateString()}-${slot}`}
+        className={classes.card}
+        variant="outlined"
+      >
+        <Typography variant="h6" component="h2">
           {slotTime}
+          {` is `}
+          {!disableCard ? 'available' : 'booked'}
         </Typography>
         <CardActions disableSpacing>
-          {!disableCard ? 'Available' : 'Booked'}
           {!disableCard &&
             resources.map((resource, index) => {
               return resource.workHours[slot] ? (
                 <Chip
                   key={`${date.toDateString()}-${slot}-${index}`}
                   label={resource.displayName}
-                  onClick={() => toggleCollapse()}
-                  disabled={disableCard}
+                  onClick={() => openForm(resource.displayName)}
                 />
               ) : (
-                <Chip
-                  key={`${date.toDateString()}-${slot}-${index}`}
-                  label={resource.displayName}
-                  disabled
-                />
+                <></>
               )
             })}
         </CardActions>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <Collapse in={selected.expanded} timeout="auto" unmountOnExit>
           <CardActions>
-            <TextField
-              id="outlined-email"
-              label="Email"
-              variant="outlined"
-              helperText="Enter A Valid Email"
-            />
-            <TextField
-              id="standard-multiline-static"
-              label="Multiline"
-              placeholder="Notes to Resource"
-              multiline
-              rows={4}
-              defaultValue="Technical Interview"
-              variant="outlined"
-            />
-            <Button onClick={() => toggleCollapse()}>Cancel</Button>
-            <Button onClick={() => toggleCollapse()}>Submit</Button>
+            <form noValidate>
+              Provide details for {selected.resource}
+              <TextField
+                id="outlined-email"
+                className={classes.form}
+                label="Email"
+                variant="outlined"
+                helperText="Enter A Valid Email"
+              />
+              <TextField
+                id="standard-multiline-static"
+                className={classes.form}
+                label="Description"
+                placeholder="Notes to Resource"
+                multiline
+                defaultValue="Technical Interview"
+                variant="outlined"
+              />
+              <Button
+                variant="outlined"
+                className={classes.formButton}
+                onClick={() => toggleCollapse()}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                className={classes.formButton}
+                onClick={() => toggleCollapse()}
+              >
+                Submit
+              </Button>
+            </form>
           </CardActions>
         </Collapse>
       </Card>

@@ -1,11 +1,24 @@
 import React from 'react'
 import { startOfWeek } from 'date-fns'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import Container from '@material-ui/core/Container'
+import { Grid, CssBaseline, makeStyles } from '@material-ui/core'
 import Daily from '../components/Daily'
 import { useSlotsContext, WEEKLY_VIEW } from '../state/slots'
 
+const useStyles = makeStyles({
+  LayoutGrid: {
+    display: 'flex',
+    justifyContent: 'space-around',
+    minWidth: '18%',
+    flexWrap: 'nowrap',
+  },
+  DailyGrid: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+})
+
 export default function Layout({ props }) {
+  const classes = useStyles()
   const { slotsOptions, slotsDispatcher } = useSlotsContext()
   const { dateDisplayed, resourceFilter, view } = slotsOptions
 
@@ -13,10 +26,18 @@ export default function Layout({ props }) {
   const weekList =
     view === WEEKLY_VIEW
       ? getWeekDates(dateDisplayed).map((date, index) =>
-          DailyContainer({ ...props, date }, `daily-container-${index}`)
+          DailyGrid(
+            { ...props, date },
+            `daily-container-${index}`,
+            classes.DailyGrid
+          )
         )
-      : [DailyContainer({ ...props, date: dateDisplayed }, 'daily-container-0')]
-  return <> {weekList}</>
+      : [DailyGrid({ ...props, date: dateDisplayed }, 'daily-container-0')]
+  return (
+    <Grid container className={classes.LayoutGrid}>
+      {weekList}
+    </Grid>
+  )
 }
 
 /*
@@ -33,13 +54,13 @@ function getWeekDates(dateSelected) {
   )
 }
 
-function DailyContainer(props, key) {
+function DailyGrid(props, key, gridClass) {
   return (
     <React.Fragment key={key}>
       <CssBaseline />
-      <Container maxWidth="lg" style={{ margin: '0 auto' }}>
+      <Grid item className={gridClass}>
         <Daily props={props} />
-      </Container>
+      </Grid>
     </React.Fragment>
   )
 }
