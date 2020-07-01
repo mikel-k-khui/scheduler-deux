@@ -9,7 +9,6 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    position: 'sticky',
   },
   login: {
     marginRight: '16px',
