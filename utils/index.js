@@ -5,9 +5,13 @@ export {
   SET_APPOINTMENTS,
   GET_SETUPS,
 } from './constant'
-
-export { errorMessage, logger } from './common'
-
+export {
+  confirmWeekday,
+  errorMessage,
+  logger,
+  returnMondayOfWeek,
+  setTargetDate,
+} from './common'
 export {
   firebaseAnonSignIn,
   firebaseUserSignIn,

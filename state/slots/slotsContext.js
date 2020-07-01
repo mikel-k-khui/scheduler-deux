@@ -50,7 +50,10 @@ function slotsReducer(state, { action, payload }) {
       return { ...state, view: WEEKLY_VIEW }
       break
     default:
-      console.error('DEBUG :: SLOTS :: REDUCER :: Action does not exist')
+      console.error(
+        'DEBUG :: SLOTS :: REDUCER :: Action does not exist',
+        action
+      )
       return { ...state }
   }
 }

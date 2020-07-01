@@ -3,6 +3,7 @@ import { startOfWeek } from 'date-fns'
 import { Grid, CssBaseline, makeStyles } from '@material-ui/core'
 import Daily from '../components/Daily'
 import { useSlotsContext, WEEKLY_VIEW } from '../state/slots'
+import { confirmWeekday, returnMondayOfWeek, setTargetDate } from '../utils'
 
 const useStyles = makeStyles({
   LayoutGrid: {
@@ -19,8 +20,8 @@ const useStyles = makeStyles({
 
 export default function Layout({ props }) {
   const classes = useStyles()
-  const { slotsOptions, slotsDispatcher } = useSlotsContext()
-  const { dateDisplayed, resourceFilter, view } = slotsOptions
+  const { slotsOptions } = useSlotsContext()
+  const { dateDisplayed, view } = slotsOptions
 
   // returns an array of DAILY DOM with containers
   const weekList =
@@ -32,7 +33,13 @@ export default function Layout({ props }) {
             classes.DailyGrid
           )
         )
-      : [DailyGrid({ ...props, date: dateDisplayed }, 'daily-container-0')]
+      : [
+          DailyGrid(
+            { ...props, date: dateDisplayed },
+            'daily-container-0',
+            classes.DailyGrid
+          ),
+        ]
   return (
     <Grid container className={classes.LayoutGrid}>
       {weekList}
@@ -47,11 +54,9 @@ export default function Layout({ props }) {
  */
 
 function getWeekDates(dateSelected) {
-  const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-
-  return weekDays.map((day, index) =>
-    startOfWeek(dateSelected, { weekStartsOn: index + 1 })
-  )
+  const firstDayOfWeek = returnMondayOfWeek(dateSelected)
+  const weekDayOffsets = [0, 1, 2, 3, 4]
+  return weekDayOffsets.map(offset => setTargetDate(firstDayOfWeek, offset))
 }
 
 function DailyGrid(props, key, gridClass) {

@@ -1,17 +1,12 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
+import { Button, Grid, Toolbar } from '@material-ui/core'
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
 import Sidebar from './Sidebar'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Dialog from '@material-ui/core/Dialog'
-import Calendar from 'react-calendar'
-import Grid from '@material-ui/core/Grid'
-import { toggleViews, useSlotsContext } from '../state/slots'
+import SimpleDialog from './SimpleDialog'
+import { toggleViews, useSlotsContext, SET_DATE } from '../state/slots'
+import { setTargetDate } from '../utils'
 
 const emails = ['username@gmail.com', 'user02@gmail.com']
 const useStyles = makeStyles(() => ({
@@ -25,53 +20,27 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-function SimpleDialog(props) {
-  const { onClose, open } = props
-
-  const handleClose = () => {
-    onClose()
-  }
-
-  const [state, setState] = useState({ date: new Date() })
-
-  const onChange = function (date) {
-    setState({ date })
-  }
-
-  return (
-    <Dialog
-      onClose={handleClose}
-      aria-labelledby="simple-dialog-title"
-      open={open}
-    >
-      <DialogTitle id="simple-dialog-title" style={{ textAlign: 'center' }}>
-        Select a date
-      </DialogTitle>
-      <Calendar onChange={onChange} value={state.date} minDate={new Date()} />
-    </Dialog>
-  )
-}
-
-SimpleDialog.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-  // selectedValue: PropTypes.string.isRequired,
-}
-
 export default function Subheader() {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
 
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = value => {
-    setOpen(false)
-  }
-
   const { slotsOptions, slotsDispatcher } = useSlotsContext()
-  const { view } = slotsOptions
+  const { dateDisplayed, view } = slotsOptions
+
+  const handleClickOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
+  const setToSelectedDate = date =>
+    slotsDispatcher({
+      action: SET_DATE,
+      payload: {
+        dateDisplayed: date,
+      },
+    })
+  const setToTomorrow = () => setToSelectedDate(setTargetDate(dateDisplayed, 1))
+  const setToYesterday = () =>
+    setToSelectedDate(setTargetDate(dateDisplayed, -1))
+
   return (
     <div className={classes.root}>
       <Toolbar className={classes.toolbar}>
@@ -81,14 +50,18 @@ export default function Subheader() {
           </Grid>
           <Grid item sm={8} style={{ textAlign: 'center' }}>
             <Button color="inherit">
-              <KeyboardArrowLeftIcon />
+              <KeyboardArrowLeftIcon onClick={() => setToYesterday()} />
             </Button>
             <Button color="inherit" onClick={handleClickOpen}>
-              {slotsOptions.dateDisplayed.toDateString()}
+              {dateDisplayed.toDateString()}
             </Button>
-            <SimpleDialog open={open} onClose={handleClose} />
+            <SimpleDialog
+              open={open}
+              onClose={handleClose}
+              onSelect={setToSelectedDate}
+            />
             <Button color="inherit">
-              <KeyboardArrowRightIcon />
+              <KeyboardArrowRightIcon onClick={() => setToTomorrow()} />
             </Button>
           </Grid>
           <Grid item sm={2} style={{ textAlign: 'right' }}>
