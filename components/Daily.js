@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import { useSlotsContext } from '../state/slots'
+import { sameDate } from '../utils'
 import { app } from 'firebase'
 
 const useStyles = makeStyles(theme => ({
@@ -51,10 +52,7 @@ export default function Daily({ props }) {
   const filteredResources = resources.filter(
     resource => !resourceFilter || resource.id === resourceFilter
   )
-  const sameDate = (thisDate, domDate) =>
-    thisDate.getDay() === domDate.getDay() &&
-    thisDate.getMonth() === domDate.getMonth() &&
-    thisDate.getFullYear() === domDate.getFullYear()
+
   const todayBookedSlots = appointments
     .filter(app => sameDate(new Date(app.date), date))
     .map(app => app.slot)

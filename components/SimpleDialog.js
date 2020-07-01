@@ -9,7 +9,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import Calendar from 'react-calendar'
-import { confirmWeekday, returnMondayOfWeek } from '../utils'
+import { confirmWeekday, getNextWeekday } from '../utils'
 
 const useStyles = makeStyles(() => ({
   text: {
@@ -34,7 +34,7 @@ export default function SimpleDialog(props) {
       onSelect(date)
       onClose()
     } else {
-      setSelect({ date: returnMondayOfWeek(date), error: true })
+      setSelect({ date: getNextWeekday(date), error: true })
     }
   }
 

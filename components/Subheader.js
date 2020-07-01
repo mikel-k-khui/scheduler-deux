@@ -1,14 +1,13 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Button, Grid, Toolbar } from '@material-ui/core'
+import { Button, IconButton, Grid, Toolbar } from '@material-ui/core'
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
 import Sidebar from './Sidebar'
 import SimpleDialog from './SimpleDialog'
 import { toggleViews, useSlotsContext, SET_DATE } from '../state/slots'
-import { setTargetDate } from '../utils'
+import { sameDate, setTargetDate } from '../utils'
 
-const emails = ['username@gmail.com', 'user02@gmail.com']
 const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
@@ -40,6 +39,8 @@ export default function Subheader() {
   const setToTomorrow = () => setToSelectedDate(setTargetDate(dateDisplayed, 1))
   const setToYesterday = () =>
     setToSelectedDate(setTargetDate(dateDisplayed, -1))
+  const isMinDate = sameDate(dateDisplayed, new Date())
+  console.log(dateDisplayed, isMinDate)
 
   return (
     <div className={classes.root}>
@@ -49,9 +50,13 @@ export default function Subheader() {
             <Sidebar />
           </Grid>
           <Grid item sm={8} style={{ textAlign: 'center' }}>
-            <Button color="inherit">
-              <KeyboardArrowLeftIcon onClick={() => setToYesterday()} />
-            </Button>
+            <IconButton
+              color="inherit"
+              disabled={isMinDate}
+              onClick={() => setToYesterday()}
+            >
+              <KeyboardArrowLeftIcon />
+            </IconButton>
             <Button color="inherit" onClick={handleClickOpen}>
               {dateDisplayed.toDateString()}
             </Button>
@@ -60,9 +65,9 @@ export default function Subheader() {
               onClose={handleClose}
               onSelect={setToSelectedDate}
             />
-            <Button color="inherit">
-              <KeyboardArrowRightIcon onClick={() => setToTomorrow()} />
-            </Button>
+            <IconButton color="inherit" onClick={() => setToTomorrow()}>
+              <KeyboardArrowRightIcon />
+            </IconButton>
           </Grid>
           <Grid item sm={2} style={{ textAlign: 'right' }}>
             <Button

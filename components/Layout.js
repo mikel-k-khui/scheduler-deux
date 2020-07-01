@@ -1,9 +1,8 @@
 import React from 'react'
-import { startOfWeek } from 'date-fns'
 import { Grid, CssBaseline, makeStyles } from '@material-ui/core'
 import Daily from '../components/Daily'
 import { useSlotsContext, WEEKLY_VIEW } from '../state/slots'
-import { confirmWeekday, returnMondayOfWeek, setTargetDate } from '../utils'
+import { getNextWeekday, getWorkweek } from '../utils'
 
 const useStyles = makeStyles({
   LayoutGrid: {
@@ -26,7 +25,7 @@ export default function Layout({ props }) {
   // returns an array of DAILY DOM with containers
   const weekList =
     view === WEEKLY_VIEW
-      ? getWeekDates(dateDisplayed).map((date, index) =>
+      ? getWorkweek(dateDisplayed).map((date, index) =>
           DailyGrid(
             { ...props, date },
             `daily-container-${index}`,
@@ -35,7 +34,7 @@ export default function Layout({ props }) {
         )
       : [
           DailyGrid(
-            { ...props, date: dateDisplayed },
+            { ...props, date: getNextWeekday(dateDisplayed) },
             'daily-container-0',
             classes.DailyGrid
           ),
@@ -45,18 +44,6 @@ export default function Layout({ props }) {
       {weekList}
     </Grid>
   )
-}
-
-/*
- * Creates an array of 5 then iterate through starting with Monday by setting
- * by setting startOfWeek to Monday, then again for Tuesday until Friday.
- * @dateSelected any day of the week
- */
-
-function getWeekDates(dateSelected) {
-  const firstDayOfWeek = returnMondayOfWeek(dateSelected)
-  const weekDayOffsets = [0, 1, 2, 3, 4]
-  return weekDayOffsets.map(offset => setTargetDate(firstDayOfWeek, offset))
 }
 
 function DailyGrid(props, key, gridClass) {

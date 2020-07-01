@@ -8,8 +8,10 @@ export {
 export {
   confirmWeekday,
   errorMessage,
+  getNextWeekday,
+  getWorkweek,
   logger,
-  returnMondayOfWeek,
+  sameDate,
   setTargetDate,
 } from './common'
 export {
