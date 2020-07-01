@@ -6,12 +6,10 @@ import {
   CardActions,
   Chip,
   Collapse,
-  Divider,
   TextField,
   Typography,
 } from '@material-ui/core'
 import { useSlotsContext } from '../state/slots'
-import { sameDate } from '../utils'
 import { app } from 'firebase'
 
 const useStyles = makeStyles(theme => ({
@@ -46,19 +44,15 @@ export default function Daily({ props }) {
 
   const { slotsOptions } = useSlotsContext()
   const { resourceFilter } = slotsOptions
-  const { appointments, resources, slots, date } = props
+  const { bookedSlots, resources, slots, date } = props
 
   // return only the resources if there is a filter; return all if it is a falsey
   const filteredResources = resources.filter(
     resource => !resourceFilter || resource.id === resourceFilter
   )
 
-  const todayBookedSlots = appointments
-    .filter(app => sameDate(new Date(app.date), date))
-    .map(app => app.slot)
-
   const dailySlots = getDailySlots(
-    todayBookedSlots,
+    bookedSlots,
     filteredResources,
     slots,
     date,

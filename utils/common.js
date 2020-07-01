@@ -16,7 +16,7 @@ export function logger(caller, message = undefined) {
 }
 
 export const sameDate = (thisDate, domDate) =>
-  thisDate.getDay() === domDate.getDay() &&
+  thisDate.getDate() === domDate.getDate() &&
   thisDate.getMonth() === domDate.getMonth() &&
   thisDate.getFullYear() === domDate.getFullYear()
 
