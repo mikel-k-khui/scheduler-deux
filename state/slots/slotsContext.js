@@ -41,7 +41,7 @@ function slotsReducer(state, { action, payload }) {
       break
     case ADD_FILTER:
     case CLEAR_FILTER:
-      return checkFilter((state, { action, payload }))
+      return checkFilter(state, { action, payload })
       break
     case DAILY_VIEW:
       return { ...state, view: DAILY_VIEW }

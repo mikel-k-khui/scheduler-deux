@@ -14,6 +14,7 @@ const useStyles = makeStyles({
   DailyGrid: {
     display: 'flex',
     flexDirection: 'column',
+    width: '19%',
   },
 })
 

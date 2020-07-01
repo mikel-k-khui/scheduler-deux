@@ -9,6 +9,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
+    position: 'sticky',
   },
   login: {
     marginRight: '16px',
@@ -18,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: '300',
   },
   toolbar: {
-    minHeight: '12vh',
+    minHeight: '10vh',
   },
 }))
 
@@ -35,9 +36,6 @@ export default function Header() {
           <Button color="inherit" className={classes.login}>
             <AccountCircleIcon style={{ marginRight: '8px' }} />
             Login
-          </Button>
-          <Button variant="outlined" color="inherit">
-            Sign Up
           </Button>
         </Toolbar>
       </AppBar>

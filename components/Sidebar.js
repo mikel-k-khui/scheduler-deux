@@ -1,13 +1,19 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
-import Drawer from '@material-ui/core/Drawer'
-import Button from '@material-ui/core/Button'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import Typography from '@material-ui/core/Typography'
-import Avatar from '@material-ui/core/Avatar'
+import {
+  Avatar,
+  Button,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from '@material-ui/core'
+import ClearIcon from '@material-ui/icons/Clear'
+import { getInitials } from '../utils'
+import { ADD_FILTER, CLEAR_FILTER } from '../state/slots'
 
 const useStyles = makeStyles({
   list: {
@@ -19,7 +25,7 @@ const useStyles = makeStyles({
   },
 })
 
-export default function SideBar() {
+export default function SideBar({ props }) {
   const classes = useStyles()
   const [state, setState] = React.useState({
     top: false,
@@ -27,7 +33,7 @@ export default function SideBar() {
     bottom: false,
     right: false,
   })
-
+  const { resources, slotsOptions, slotsDispatcher } = props
   const toggleDrawer = (anchor, open) => event => {
     if (
       event.type === 'keydown' &&
@@ -39,7 +45,46 @@ export default function SideBar() {
     setState({ ...state, [anchor]: open })
   }
 
-  const list = anchor => (
+  const setFilter = (id = undefined) => {
+    if (!id) {
+      slotsDispatcher({
+        action: CLEAR_FILTER,
+        payload: { resourceFilter: undefined },
+      })
+    } else {
+      slotsDispatcher({ action: ADD_FILTER, payload: { resourceFilter: id } })
+    }
+  }
+
+  const list = filters => {
+    return filters.map((filter, index) => {
+      return (
+        <Fragment key={`filter-${index}`}>
+          <ListItem
+            alignItems="flex-start"
+            onClick={() => setFilter(filter.id)}
+          >
+            <Avatar alt={filter.displayName} style={{ marginRight: '16px' }}>
+              {getInitials(filter.displayName)}
+            </Avatar>
+            <ListItemText>{filter.displayName}</ListItemText>
+          </ListItem>
+        </Fragment>
+      )
+    })
+  }
+
+  const clearButton = () => {
+    return (
+      <Fragment>
+        <IconButton onClick={() => setFilter()}>
+          <ClearIcon style={{ color: 'white' }} />
+        </IconButton>
+      </Fragment>
+    )
+  }
+
+  const filter = anchor => (
     <div
       className={clsx(classes.list, {
         [classes.fullList]: anchor === 'top' || anchor === 'bottom',
@@ -52,14 +97,9 @@ export default function SideBar() {
         variant="h6"
         style={{ marginLeft: '16px', marginTop: '32px' }}
       >
-        Interviewers
+        Resources
       </Typography>
-      <List>
-        <ListItem>
-          <Avatar style={{ marginRight: '16px' }} />
-          <ListItemText>FirstName LastName</ListItemText>
-        </ListItem>
-      </List>
+      <List>{list(resources)}</List>
     </div>
   )
 
@@ -67,14 +107,15 @@ export default function SideBar() {
     <div>
       <React.Fragment key="left">
         <Button color="inherit" onClick={toggleDrawer('left', true)}>
-          Interviewers
+          Resources Filter: {slotsOptions.resourceFilter ? 'on' : 'off'}
         </Button>
+        {slotsOptions.resourceFilter && clearButton()}
         <Drawer
           anchor="left"
           open={state['left']}
           onClose={toggleDrawer('left', false)}
         >
-          {list('left')}
+          {filter('left')}
         </Drawer>
       </React.Fragment>
     </div>

@@ -19,12 +19,13 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export default function Subheader() {
+export default function Subheader({ props }) {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
 
   const { slotsOptions, slotsDispatcher } = useSlotsContext()
   const { dateDisplayed, view } = slotsOptions
+  const { resources } = props
 
   const handleClickOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -40,14 +41,13 @@ export default function Subheader() {
   const setToYesterday = () =>
     setToSelectedDate(setTargetDate(dateDisplayed, -1))
   const isMinDate = sameDate(dateDisplayed, new Date())
-  console.log(dateDisplayed, isMinDate)
 
   return (
     <div className={classes.root}>
       <Toolbar className={classes.toolbar}>
         <Grid container spacing={3}>
           <Grid item sm={2}>
-            <Sidebar />
+            <Sidebar props={{ resources, slotsOptions, slotsDispatcher }} />
           </Grid>
           <Grid item sm={8} style={{ textAlign: 'center' }}>
             <IconButton

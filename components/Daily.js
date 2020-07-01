@@ -1,16 +1,19 @@
 import React, { Fragment, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
+  Avatar,
   Button,
   Card,
   CardActions,
   Chip,
   Collapse,
   TextField,
+  Tooltip,
   Typography,
 } from '@material-ui/core'
 import { useSlotsContext } from '../state/slots'
 import { app } from 'firebase'
+import { getInitials } from '../utils'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -80,6 +83,20 @@ function getDailySlots(bookedSlots, resources, slots, date, classes) {
     const openForm = resource => setSelected({ expanded: true, resource })
     const disableCard = bookedSlots.includes(slot)
 
+    const getResourceAvatars = () => {
+      return resources.map((resource, index) => {
+        return resource.workHours[slot] ? (
+          <Tooltip title={resource.displayName}>
+            <Avatar onClick={() => openForm(resource.displayName)}>
+              {getInitials(resource.displayName)}
+            </Avatar>
+          </Tooltip>
+        ) : (
+          <></>
+        )
+      })
+    }
+
     return (
       <Card
         key={`${date.toDateString()}-${slot}`}
@@ -92,18 +109,7 @@ function getDailySlots(bookedSlots, resources, slots, date, classes) {
           {!disableCard ? 'available' : 'booked'}
         </Typography>
         <CardActions disableSpacing>
-          {!disableCard &&
-            resources.map((resource, index) => {
-              return resource.workHours[slot] ? (
-                <Chip
-                  key={`${date.toDateString()}-${slot}-${index}`}
-                  label={resource.displayName}
-                  onClick={() => openForm(resource.displayName)}
-                />
-              ) : (
-                <></>
-              )
-            })}
+          {!disableCard && getResourceAvatars()}
         </CardActions>
         <Collapse in={selected.expanded} timeout="auto" unmountOnExit>
           <CardActions>

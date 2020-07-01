@@ -48,3 +48,9 @@ export function getWorkweek(dateSelected) {
   const weekDayOffsets = daysOfWeek.map(day => day - dayOfWorkday)
   return weekDayOffsets.map(offset => setTargetDate(nextWorkkday, offset))
 }
+
+export function getInitials(displayName) {
+  return displayName
+    .split(' ')
+    .reduce((accum, curr) => accum.concat(curr[0]), '')
+}

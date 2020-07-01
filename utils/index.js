@@ -8,6 +8,7 @@ export {
 export {
   confirmWeekday,
   errorMessage,
+  getInitials,
   getNextWeekday,
   getWorkweek,
   logger,
