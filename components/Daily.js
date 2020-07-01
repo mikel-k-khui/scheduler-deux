@@ -11,7 +11,6 @@ import {
   Typography,
 } from '@material-ui/core'
 import { useSlotsContext } from '../state/slots'
-import { sameDate } from '../utils'
 import { app } from 'firebase'
 import { getCallable, getInitials, SET_APPOINTMENTS } from '../utils'
 
