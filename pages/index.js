@@ -46,7 +46,7 @@ export async function getStaticProps() {
   firebaseInitialize()
   let setups = await getCallable(GET_SETUPS)
   let appointments = await getCallable(GET_APPOINTMENTS, {
-    data: { today: new Date() },
+    today: new Date(),
   })
   await firebaseAnonSignIn()
 
