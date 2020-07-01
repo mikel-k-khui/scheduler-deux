@@ -1,5 +1,5 @@
 import firebase, { app, auth, functions } from 'firebase/app'
-import { errorMessage } from './common'
+import { errorMessage, logger } from './common'
 
 export function firebaseInitialize() {
   const firebaseConfig = {
@@ -15,7 +15,6 @@ export function firebaseInitialize() {
 
   try {
     app()
-    console.log(`FIREBASE :: APP EXISTS...`)
   } catch (err) {
     console.log('FIREBASE :: INITIALIZE_APP...')
     return firebase.initializeApp(firebaseConfig)
@@ -25,13 +24,21 @@ export function firebaseInitialize() {
 export function firebaseAnonSignIn() {
   return auth()
     .signInAnonymously()
+    .then(user =>
+      logger(
+        'SUCCEESSFUL LOGIN',
+        `${user.uid} is logged under ${
+          user.isAnonymous ? 'anonymous' : user.email
+        }.`
+      )
+    )
     .catch(err => errorMessage(err, 'ANONYMOUS_USER'))
 }
 
 export function firebaseUserSignIn(email, password) {
   return auth()
     .signInWithEmailAndPassword(email, password)
-    .catch(err => errorMessage(err, 'USER_LOGIN'))
+    .catch(err => errorMessage(err.cod, 'USER_LOGIN', email))
 }
 
 export async function getCallable(functionName, data = {}) {
@@ -45,4 +52,16 @@ export async function getCallable(functionName, data = {}) {
     errorMessage(err, 'GET_CALLABLE')
     return null
   }
+}
+
+export function getUser() {
+  return auth().currentUser
+}
+
+export function getUserId() {
+  return auth().currentUser.uid
+}
+
+export function isUserAnonymous() {
+  return auth().currentUser.isAnonymous
 }

@@ -5,6 +5,7 @@ export const CLEAR_FILTER = 'CLEAR_FILTER'
 export const DAILY_VIEW = 'Daily'
 export const WEEKLY_VIEW = 'Weekly'
 
+// TODO: fix in TS refactor
 // export interface slotsState {
 //   dateDisplayed: Date
 //   resourceFilter: null | string
@@ -14,5 +15,5 @@ export const WEEKLY_VIEW = 'Weekly'
 export const slotsInitialState = {
   dateDisplayed: new Date(),
   resourceFilter: undefined,
-  view: WEEKLY_VIEW,
+  view: DAILY_VIEW,
 }

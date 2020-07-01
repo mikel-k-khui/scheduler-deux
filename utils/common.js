@@ -8,3 +8,7 @@ export function errorMessage(error, caller, message = undefined) {
     !message ? error.message : message
   )
 }
+
+export function logger(caller, message = undefined) {
+  console.log('LOGGER :: ', caller, ' :: message: ', message)
+}
