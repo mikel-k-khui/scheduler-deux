@@ -27,8 +27,8 @@ export function firebaseAnonSignIn() {
     .then(user =>
       logger(
         'SUCCEESSFUL LOGIN',
-        `${user.uid} is logged under ${
-          user.isAnonymous ? 'anonymous' : user.email
+        `${user.id} is logged under ${
+          !user.isAnonymous ? 'anonymous' : user.email
         }.`
       )
     )

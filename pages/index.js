@@ -3,7 +3,6 @@ import Head from 'next/head'
 import Header from '../components/Header'
 import Subheader from '../components/Subheader'
 import Layout from '../components/Layout'
-import Daily from '../components/Daily'
 import {
   firebaseAnonSignIn,
   firebaseInitialize,
@@ -13,22 +12,25 @@ import {
   getUserId,
   isUserAnonymous,
 } from '../utils'
+import { SlotsProvider } from '../state/slots'
 import firebase, { auth } from 'firebase'
 
 export default function Home(props) {
   // check if firebase works after build. This function will not re-initialize.
   firebaseInitialize()
 
-  console.log('Start of props and user', isUserAnonymous(), getUserId(), props)
+  // console.log('Start of props and user', isUserAnonymous(), getUserId(), props)
   return (
-    <div>
+    <React.Fragment>
       <Head>
         <title>Scheduler 2.0</title>
       </Head>
       <Header />
-      <Subheader props={{ ...props }} />
-      <Layout props={{ ...props }} />
-    </div>
+      <SlotsProvider>
+        <Subheader props={{ ...props }} />
+        <Layout props={{ ...props }} />
+      </SlotsProvider>
+    </React.Fragment>
   )
 }
 
@@ -43,7 +45,9 @@ export async function getStaticProps() {
   // initialize firebase in build to pull initial data
   firebaseInitialize()
   let setups = await getCallable(GET_SETUPS)
-  let appointments = await getCallable(GET_APPOINTMENTS)
+  let appointments = await getCallable(GET_APPOINTMENTS, {
+    data: { today: new Date() },
+  })
   await firebaseAnonSignIn()
 
   setups = {
