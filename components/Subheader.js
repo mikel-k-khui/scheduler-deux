@@ -72,7 +72,6 @@ export default function Subheader() {
 
   const { slotsOptions, slotsDispatcher } = useSlotsContext()
   const { view } = slotsOptions
-  console.debug('DEBUG :: before Subheaders :: options:', slotsOptions)
   return (
     <div className={classes.root}>
       <Toolbar className={classes.toolbar}>

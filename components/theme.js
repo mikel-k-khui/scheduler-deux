@@ -36,6 +36,10 @@ const theme = createMuiTheme({
       fontWeight: '700',
     },
   },
+  root: {
+    margin: '5px',
+    pdding: '5px',
+  },
 })
 
 export default theme

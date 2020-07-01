@@ -4,7 +4,6 @@ import Head from 'next/head'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { theme } from '../components'
-import { SlotsProvider } from '../state/slots'
 import 'react-calendar/dist/Calendar.css'
 
 // measure  TTFB, FCP, LCP, FID, and CLS
@@ -22,7 +21,6 @@ export default function MyApp({ Component, pageProps }) {
       jssStyles.parentElement.removeChild(jssStyles)
     }
   }, [])
-
   return (
     <React.Fragment>
       <Head>
@@ -35,9 +33,7 @@ export default function MyApp({ Component, pageProps }) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <SlotsProvider>
-          <Component {...pageProps} />
-        </SlotsProvider>
+        <Component {...pageProps} />
       </ThemeProvider>
     </React.Fragment>
   )
