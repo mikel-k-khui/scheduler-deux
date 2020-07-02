@@ -1,17 +1,18 @@
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
+  Avatar,
   Button,
   Card,
   CardActions,
-  Chip,
   Collapse,
-  Divider,
   TextField,
+  Tooltip,
   Typography,
 } from '@material-ui/core'
 import { useSlotsContext } from '../state/slots'
 import { app } from 'firebase'
+import { getCallable, getInitials, SET_APPOINTMENTS } from '../utils'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,22 +46,15 @@ export default function Daily({ props }) {
 
   const { slotsOptions } = useSlotsContext()
   const { resourceFilter } = slotsOptions
-  const { appointments, resources, slots, date } = props
+  const { bookedSlots, resources, slots, date } = props
 
   // return only the resources if there is a filter; return all if it is a falsey
   const filteredResources = resources.filter(
     resource => !resourceFilter || resource.id === resourceFilter
   )
-  const sameDate = (thisDate, domDate) =>
-    thisDate.getDay() === domDate.getDay() &&
-    thisDate.getMonth() === domDate.getMonth() &&
-    thisDate.getFullYear() === domDate.getFullYear()
-  const todayBookedSlots = appointments
-    .filter(app => sameDate(new Date(app.date), date))
-    .map(app => app.slot)
 
   const dailySlots = getDailySlots(
-    todayBookedSlots,
+    bookedSlots,
     filteredResources,
     slots,
     date,
@@ -80,13 +74,45 @@ export default function Daily({ props }) {
 function getDailySlots(bookedSlots, resources, slots, date, classes) {
   return Object.entries(slots).map(([slot, slotTime]) => {
     const initialState = {
+      error: false,
       expanded: false,
-      resource: '',
+      resourceName: '',
+      resourceId: '',
     }
     const [selected, setSelected] = useState(initialState)
     const toggleCollapse = () => setSelected(initialState)
-    const openForm = resource => setSelected({ expanded: true, resource })
+    const openForm = resource =>
+      setSelected({
+        ...selected,
+        expanded: true,
+        resourceName: resource.displayName,
+        resourceId: resource.id,
+      })
+
+    const [form, setForm] = useState({
+      requesterEmail: '',
+      requesterName: '',
+      note: '',
+    })
+    const handleChange = field => setForm({ ...form, ...field })
+
     const disableCard = bookedSlots.includes(slot)
+
+    const handleSubmit = async e => {
+      e.preventDefault()
+      const result = await getCallable(SET_APPOINTMENTS, {
+        ...form,
+        slot,
+        date,
+      })
+
+      // getCallable catches all error and log in then return null if error
+      if (!result) {
+        setSelected({ ...selected, error: true })
+      } else {
+        // TODO: add appointment to data
+      }
+    }
 
     return (
       <Card
@@ -100,38 +126,36 @@ function getDailySlots(bookedSlots, resources, slots, date, classes) {
           {!disableCard ? 'available' : 'booked'}
         </Typography>
         <CardActions disableSpacing>
-          {!disableCard &&
-            resources.map((resource, index) => {
-              return resource.workHours[slot] ? (
-                <Chip
-                  key={`${date.toDateString()}-${slot}-${index}`}
-                  label={resource.displayName}
-                  onClick={() => openForm(resource.displayName)}
-                />
-              ) : (
-                <></>
-              )
-            })}
+          {!disableCard && getResourceAvatars(resources, slot, openForm)}
         </CardActions>
         <Collapse in={selected.expanded} timeout="auto" unmountOnExit>
           <CardActions>
-            <form noValidate>
-              Provide details for {selected.resource}
+            <form noValidate onSubmit={e => handleSubmit(e)}>
+              Provide details for {selected.resource}:
               <TextField
-                id="outlined-email"
+                className={classes.form}
+                label="Name"
+                variant="outlined"
+                onChange={e => handleChange({ requesterName: e.target.value })}
+                helperText="Enter Your Preferred Name"
+                required
+              />
+              <TextField
                 className={classes.form}
                 label="Email"
                 variant="outlined"
+                onChange={e => handleChange({ requesterEmail: e.target.value })}
                 helperText="Enter A Valid Email"
+                required
               />
               <TextField
-                id="standard-multiline-static"
                 className={classes.form}
                 label="Description"
+                variant="outlined"
+                onChange={e => handleChange({ note: e.target.value })}
                 placeholder="Notes to Resource"
                 multiline
                 defaultValue="Technical Interview"
-                variant="outlined"
               />
               <Button
                 variant="outlined"
@@ -144,7 +168,7 @@ function getDailySlots(bookedSlots, resources, slots, date, classes) {
                 variant="outlined"
                 color="primary"
                 className={classes.formButton}
-                onClick={() => toggleCollapse()}
+                type="submit"
               >
                 Submit
               </Button>
@@ -152,6 +176,20 @@ function getDailySlots(bookedSlots, resources, slots, date, classes) {
           </CardActions>
         </Collapse>
       </Card>
+    )
+  })
+}
+
+function getResourceAvatars(resources, slot, openForm) {
+  return resources.map((resource, index) => {
+    return resource.workHours[slot] ? (
+      <Tooltip title={resource.displayName}>
+        <Avatar onClick={() => openForm(resource)}>
+          {getInitials(resource.displayName)}
+        </Avatar>
+      </Tooltip>
+    ) : (
+      <></>
     )
   })
 }

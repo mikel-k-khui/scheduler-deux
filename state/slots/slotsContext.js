@@ -41,7 +41,7 @@ function slotsReducer(state, { action, payload }) {
       break
     case ADD_FILTER:
     case CLEAR_FILTER:
-      return checkFilter((state, { action, payload }))
+      return checkFilter(state, { action, payload })
       break
     case DAILY_VIEW:
       return { ...state, view: DAILY_VIEW }
@@ -50,7 +50,10 @@ function slotsReducer(state, { action, payload }) {
       return { ...state, view: WEEKLY_VIEW }
       break
     default:
-      console.error('DEBUG :: SLOTS :: REDUCER :: Action does not exist')
+      console.error(
+        'DEBUG :: SLOTS :: REDUCER :: Action does not exist',
+        action
+      )
       return { ...state }
   }
 }

@@ -1,8 +1,8 @@
 import React from 'react'
-import { startOfWeek } from 'date-fns'
 import { Grid, CssBaseline, makeStyles } from '@material-ui/core'
 import Daily from '../components/Daily'
 import { useSlotsContext, WEEKLY_VIEW } from '../state/slots'
+import { getNextWeekday, getWorkweek, sameDate } from '../utils'
 
 const useStyles = makeStyles({
   LayoutGrid: {
@@ -14,43 +14,46 @@ const useStyles = makeStyles({
   DailyGrid: {
     display: 'flex',
     flexDirection: 'column',
+    width: '19%',
   },
 })
 
 export default function Layout({ props }) {
   const classes = useStyles()
-  const { slotsOptions, slotsDispatcher } = useSlotsContext()
-  const { dateDisplayed, resourceFilter, view } = slotsOptions
+  const { slotsOptions } = useSlotsContext()
+  const { dateDisplayed, view } = slotsOptions
+  const { appointments, ...otherProps } = props
 
+  // return the appointment slots for the date
+  const bookedSlots = date =>
+    appointments
+      .filter(app => sameDate(new Date(app.date), date))
+      .map(app => app.slot)
   // returns an array of DAILY DOM with containers
   const weekList =
     view === WEEKLY_VIEW
-      ? getWeekDates(dateDisplayed).map((date, index) =>
+      ? getWorkweek(dateDisplayed).map((date, index) =>
           DailyGrid(
-            { ...props, date },
+            { ...otherProps, bookedSlots: bookedSlots(date), date },
             `daily-container-${index}`,
             classes.DailyGrid
           )
         )
-      : [DailyGrid({ ...props, date: dateDisplayed }, 'daily-container-0')]
+      : [
+          DailyGrid(
+            {
+              ...otherProps,
+              bookedSlots: bookedSlots(getNextWeekday(dateDisplayed)),
+              date: getNextWeekday(dateDisplayed),
+            },
+            'daily-container-0',
+            classes.DailyGrid
+          ),
+        ]
   return (
     <Grid container className={classes.LayoutGrid}>
       {weekList}
     </Grid>
-  )
-}
-
-/*
- * Creates an array of 5 then iterate through starting with Monday by setting
- * by setting startOfWeek to Monday, then again for Tuesday until Friday.
- * @dateSelected any day of the week
- */
-
-function getWeekDates(dateSelected) {
-  const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-
-  return weekDays.map((day, index) =>
-    startOfWeek(dateSelected, { weekStartsOn: index + 1 })
   )
 }
 
