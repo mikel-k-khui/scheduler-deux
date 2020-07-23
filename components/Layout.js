@@ -62,7 +62,7 @@ function DailyGrid(props, key, gridClass) {
     <React.Fragment key={key}>
       <CssBaseline />
       <Grid item className={gridClass}>
-        <Daily props={props} />
+        <Daily props={props} key={key} />
       </Grid>
     </React.Fragment>
   )

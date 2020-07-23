@@ -183,7 +183,7 @@ function getDailySlots(bookedSlots, resources, slots, date, classes) {
 function getResourceAvatars(resources, slot, openForm) {
   return resources.map((resource, index) => {
     return resource.workHours[slot] ? (
-      <Tooltip title={resource.displayName}>
+      <Tooltip title={resource.displayName} key={`tooltip-${index}`}>
         <Avatar onClick={() => openForm(resource)}>
           {getInitials(resource.displayName)}
         </Avatar>
