@@ -44,11 +44,12 @@ export function firebaseUserSignIn(email, password) {
 // call the provided callable then catches all error, log it and return null
 export async function getCallable(functionName, data = {}) {
   const callFunction = functions().httpsCallable(functionName)
+  console.log('DEBUG :: data trigger?', data)
 
   try {
-    const results = await callFunction({ ...data })
-    console.log('What is in callable?', results)
-    return results
+    const results = await callFunction(data)
+    console.log('DEBUG :: CALLABLE :: results?', results)
+    return results.data
   } catch (err) {
     errorMessage(err, 'GET_CALLABLE')
     return null
