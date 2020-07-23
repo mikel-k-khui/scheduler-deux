@@ -66,7 +66,7 @@ export async function getStaticProps() {
   const today = new Date()
   let setups = await getCallable(GET_SETUPS)
   let appointments = await getCallable(GET_APPOINTMENTS, {
-    today: today.toJSON(),
+    today: today.toString(),
   })
   await firebaseAnonSignIn()
 
