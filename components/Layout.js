@@ -44,11 +44,11 @@ export default function Layout({ props }) {
       .filter(app => sameDate(new Date(app.date), date))
       .map(app => app.slot)
 
-  // const mdWindow = useMediaQuery(theme => theme.breakpoints.up('md'))
+  const mdWindow = useMediaQuery(theme => theme.breakpoints.up('md'))
 
   // returns an array of DAILY DOM with containers
   const weekList =
-    view === WEEKLY_VIEW
+    view === WEEKLY_VIEW && mdWindow
       ? getWorkweek(dateDisplayed).map((date, index) =>
           DailyGrid(
             { ...otherProps, bookedSlots: bookedSlots(date), date },
