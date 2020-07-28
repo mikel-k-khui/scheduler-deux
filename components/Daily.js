@@ -18,10 +18,9 @@ const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     backgroundColor: theme.palette.background.paper,
-    justifyContent: 'space-around',
   },
   card: {
-    minHeight: '90px',
+    minHeight: '100px',
     minWidth: '22%',
     margin: '5px',
     padding: '5px',
@@ -141,74 +140,88 @@ function getDailySlots(bookedSlots, resources, slots, date, classes) {
       toggleCollapse()
     }
 
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+
+    const datePast = date.valueOf() < yesterday.valueOf()
+
     return (
       <Card
         key={`${date.toDateString()}-${slot}`}
         className={classes.card}
         variant="outlined"
       >
-        <Typography variant="h6" component="h2">
-          {slotTime}
-          {` is `}
-          {!disableCard ? 'available' : 'booked'}
-        </Typography>
-        <CardActions disableSpacing>
-          {!disableCard &&
-            getResourceAvatars(resources, slot, openForm, classes)}
-        </CardActions>
-        <Modal
-          open={selected.expanded}
-          onClose={toggleCollapse}
-          className={classes.modal}
-          unmountOnExit
-        >
-          <CardActions className={classes.modalContainer}>
-            <form noValidate onSubmit={e => handleSubmit(e)}>
-              Provide details for {selected.resource}:
-              <TextField
-                className={classes.form}
-                label="Name"
-                variant="outlined"
-                onChange={e => handleChange({ requesterName: e.target.value })}
-                helperText="Enter Your Preferred Name"
-                required
-              />
-              <TextField
-                className={classes.form}
-                label="Email"
-                variant="outlined"
-                onChange={e => handleChange({ requesterEmail: e.target.value })}
-                helperText="Enter A Valid Email"
-                required
-              />
-              <TextField
-                className={classes.form}
-                label="Description"
-                variant="outlined"
-                onChange={e => handleChange({ note: e.target.value })}
-                placeholder="Notes to Resource"
-                multiline
-                defaultValue="Technical Interview"
-              />
-              <Button
-                variant="outlined"
-                color="primary"
-                className={classes.formButton}
-                type="submit"
-                onSubmit={handleSubmit}
-              >
-                Submit
-              </Button>
-              <Button
-                variant="outlined"
-                className={classes.formButton}
-                onClick={toggleCollapse}
-              >
-                Cancel
-              </Button>
-            </form>
-          </CardActions>
-        </Modal>
+        {datePast ? (
+          'Appointment Time passed'
+        ) : (
+          <>
+            <Typography variant="h6" component="h2">
+              {slotTime}
+              {` is `}
+              {!disableCard ? 'available' : 'booked'}
+            </Typography>
+            <CardActions disableSpacing>
+              {!disableCard &&
+                getResourceAvatars(resources, slot, openForm, classes)}
+            </CardActions>
+            <Modal
+              open={selected.expanded}
+              onClose={toggleCollapse}
+              className={classes.modal}
+            >
+              <CardActions className={classes.modalContainer}>
+                <form noValidate onSubmit={e => handleSubmit(e)}>
+                  Provide details for {selected.resource}:
+                  <TextField
+                    className={classes.form}
+                    label="Name"
+                    variant="outlined"
+                    onChange={e =>
+                      handleChange({ requesterName: e.target.value })
+                    }
+                    helperText="Enter Your Preferred Name"
+                    required
+                  />
+                  <TextField
+                    className={classes.form}
+                    label="Email"
+                    variant="outlined"
+                    onChange={e =>
+                      handleChange({ requesterEmail: e.target.value })
+                    }
+                    helperText="Enter A Valid Email"
+                    required
+                  />
+                  <TextField
+                    className={classes.form}
+                    label="Description"
+                    variant="outlined"
+                    onChange={e => handleChange({ note: e.target.value })}
+                    placeholder="Notes to Resource"
+                    multiline
+                    defaultValue={form.note}
+                  />
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    className={classes.formButton}
+                    type="submit"
+                    onSubmit={handleSubmit}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    className={classes.formButton}
+                    onClick={toggleCollapse}
+                  >
+                    Cancel
+                  </Button>
+                </form>
+              </CardActions>
+            </Modal>
+          </>
+        )}
       </Card>
     )
   })
