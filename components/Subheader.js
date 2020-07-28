@@ -8,14 +8,29 @@ import SimpleDialog from './SimpleDialog'
 import { toggleViews, useSlotsContext, SET_DATE } from '../state/slots'
 import { sameDate, setTargetDate } from '../utils'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
+    position: 'fixed',
+    minHeight: '5vh',
+    top: '10vh',
+    width: '100%',
+    zIndex: '1',
   },
   toolbar: {
     minHeight: '6vh',
     backgroundColor: '#5c5c5c',
     color: '#FFF',
+  },
+  grid: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  view: {
+    [theme.breakpoints.down('md')]: {
+      display: 'none',
+    },
   },
 }))
 
@@ -45,7 +60,7 @@ export default function Subheader({ props }) {
   return (
     <div className={classes.root}>
       <Toolbar className={classes.toolbar}>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} className={classes.grid}>
           <Grid item sm={2}>
             <Sidebar props={{ resources, slotsOptions, slotsDispatcher }} />
           </Grid>
@@ -69,7 +84,12 @@ export default function Subheader({ props }) {
               <KeyboardArrowRightIcon />
             </IconButton>
           </Grid>
-          <Grid item sm={2} style={{ textAlign: 'right' }}>
+          <Grid
+            item
+            sm={2}
+            style={{ textAlign: 'right' }}
+            className={classes.view}
+          >
             <Button
               color="inherit"
               onClick={() => {

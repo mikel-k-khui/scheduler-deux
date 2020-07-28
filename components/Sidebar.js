@@ -74,6 +74,14 @@ export default function SideBar({ props }) {
     })
   }
 
+  const offButton = () => {
+    return (
+      <Button color="inherit" onClick={toggleDrawer('left', true)}>
+        off
+      </Button>
+    )
+  }
+
   const clearButton = () => {
     return (
       <Fragment>
@@ -106,10 +114,7 @@ export default function SideBar({ props }) {
   return (
     <div>
       <React.Fragment key="left">
-        <Button color="inherit" onClick={toggleDrawer('left', true)}>
-          Resources Filter: {slotsOptions.resourceFilter ? 'on' : 'off'}
-        </Button>
-        {slotsOptions.resourceFilter && clearButton()}
+        Filter: {slotsOptions.resourceFilter ? clearButton() : offButton()}
         <Drawer
           anchor="left"
           open={state['left']}

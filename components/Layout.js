@@ -4,19 +4,33 @@ import Daily from '../components/Daily'
 import { useSlotsContext, WEEKLY_VIEW } from '../state/slots'
 import { getNextWeekday, getWorkweek, sameDate } from '../utils'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   LayoutGrid: {
+    top: '20vh',
+    position: 'relative',
     display: 'flex',
     justifyContent: 'space-around',
     minWidth: '18%',
-    flexWrap: 'nowrap',
   },
   DailyGrid: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '90%',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    [theme.breakpoints.down('md')]: {
+      width: '80%',
+      margin: '5px',
+      padding: '5px',
+      justifyContent: 'center',
+    },
+  },
+  WeeklyGrid: {
     display: 'flex',
     flexDirection: 'column',
     width: '19%',
   },
-})
+}))
 
 export default function Layout({ props }) {
   const classes = useStyles()
@@ -36,7 +50,7 @@ export default function Layout({ props }) {
           DailyGrid(
             { ...otherProps, bookedSlots: bookedSlots(date), date },
             `daily-container-${index}`,
-            classes.DailyGrid
+            classes.WeeklyGrid
           )
         )
       : [
