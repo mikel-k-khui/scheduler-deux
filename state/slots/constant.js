@@ -15,5 +15,5 @@ export const WEEKLY_VIEW = 'Weekly'
 export const slotsInitialState = {
   dateDisplayed: new Date(),
   resourceFilter: undefined,
-  view: WEEKLY_VIEW,
+  view: DAILY_VIEW,
 }

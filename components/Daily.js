@@ -5,7 +5,7 @@ import {
   Button,
   Card,
   CardActions,
-  Collapse,
+  Modal,
   TextField,
   Tooltip,
   Typography,
@@ -22,6 +22,23 @@ const useStyles = makeStyles(theme => ({
   },
   card: {
     minHeight: '90px',
+    minWidth: '22%',
+    margin: '5px',
+    padding: '5px',
+    [theme.breakpoints.down('md')]: {
+      minWidth: '80%',
+      margin: '5px',
+      padding: '5px',
+    },
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '90px',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
   },
   inputBox: {
     display: 'flex',
@@ -38,6 +55,14 @@ const useStyles = makeStyles(theme => ({
   },
   formButton: {
     paddingLeft: '10px',
+    margin: '5px',
+    float: 'right',
+  },
+  avatar: {
+    '&:hover': {
+      backgroundColor: '#222f3e',
+      color: 'white',
+    },
   },
 }))
 
@@ -92,7 +117,7 @@ function getDailySlots(bookedSlots, resources, slots, date, classes) {
     const [form, setForm] = useState({
       requesterEmail: '',
       requesterName: '',
-      note: '',
+      note: 'Technical Interview',
     })
     const handleChange = field => setForm({ ...form, ...field })
 
@@ -111,7 +136,9 @@ function getDailySlots(bookedSlots, resources, slots, date, classes) {
         setSelected({ ...selected, error: true })
       } else {
         // TODO: add appointment to data
+        console.log('What is in submit?', result)
       }
+      toggleCollapse()
     }
 
     return (
@@ -126,10 +153,16 @@ function getDailySlots(bookedSlots, resources, slots, date, classes) {
           {!disableCard ? 'available' : 'booked'}
         </Typography>
         <CardActions disableSpacing>
-          {!disableCard && getResourceAvatars(resources, slot, openForm)}
+          {!disableCard &&
+            getResourceAvatars(resources, slot, openForm, classes)}
         </CardActions>
-        <Collapse in={selected.expanded} timeout="auto" unmountOnExit>
-          <CardActions>
+        <Modal
+          open={selected.expanded}
+          onClose={toggleCollapse}
+          className={classes.modal}
+          unmountOnExit
+        >
+          <CardActions className={classes.modalContainer}>
             <form noValidate onSubmit={e => handleSubmit(e)}>
               Provide details for {selected.resource}:
               <TextField
@@ -159,32 +192,37 @@ function getDailySlots(bookedSlots, resources, slots, date, classes) {
               />
               <Button
                 variant="outlined"
-                className={classes.formButton}
-                onClick={() => toggleCollapse()}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="outlined"
                 color="primary"
                 className={classes.formButton}
                 type="submit"
+                onSubmit={handleSubmit}
               >
                 Submit
               </Button>
+              <Button
+                variant="outlined"
+                className={classes.formButton}
+                onClick={toggleCollapse}
+              >
+                Cancel
+              </Button>
             </form>
           </CardActions>
-        </Collapse>
+        </Modal>
       </Card>
     )
   })
 }
 
-function getResourceAvatars(resources, slot, openForm) {
+function getResourceAvatars(resources, slot, openForm, classes) {
   return resources.map((resource, index) => {
     return resource.workHours[slot] ? (
-      <Tooltip title={resource.displayName}>
-        <Avatar onClick={() => openForm(resource)}>
+      <Tooltip title={resource.displayName} key={`tooltip-${index}`}>
+        <Avatar
+          variant="rounded"
+          className={classes.avatar}
+          onClick={() => openForm(resource)}
+        >
           {getInitials(resource.displayName)}
         </Avatar>
       </Tooltip>
