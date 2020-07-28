@@ -1,5 +1,5 @@
-import React from 'react'
-import { Grid, CssBaseline, makeStyles } from '@material-ui/core'
+import React, { Fragment, useLayoutEffect } from 'react'
+import { Grid, makeStyles, useMediaQuery } from '@material-ui/core'
 import Daily from '../components/Daily'
 import { useSlotsContext, WEEKLY_VIEW } from '../state/slots'
 import { getNextWeekday, getWorkweek, sameDate } from '../utils'
@@ -43,9 +43,12 @@ export default function Layout({ props }) {
     appointments
       .filter(app => sameDate(new Date(app.date), date))
       .map(app => app.slot)
+
+  const mdWindow = useMediaQuery(theme => theme.breakpoints.up('md'))
+
   // returns an array of DAILY DOM with containers
   const weekList =
-    view === WEEKLY_VIEW
+    view === WEEKLY_VIEW && mdWindow
       ? getWorkweek(dateDisplayed).map((date, index) =>
           DailyGrid(
             { ...otherProps, bookedSlots: bookedSlots(date), date },
@@ -73,11 +76,10 @@ export default function Layout({ props }) {
 
 function DailyGrid(props, key, gridClass) {
   return (
-    <React.Fragment key={key}>
-      <CssBaseline />
+    <Fragment key={key}>
       <Grid item className={gridClass}>
-        <Daily props={props} key={key} />
+        <Daily props={props} key={`Daily-${key}`} />
       </Grid>
-    </React.Fragment>
+    </Fragment>
   )
 }

@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import Head from 'next/head'
+import { CssBaseline } from '@material-ui/core'
 import Header from '../components/Header'
 import Subheader from '../components/Subheader'
 import Layout from '../components/Layout'
@@ -22,6 +23,7 @@ export default function Home(props) {
   // console.log('Start of props and user', isUserAnonymous(), getUserId(), props)
   return (
     <Fragment>
+      <CssBaseline />
       <Head>
         <title>Scheduler 2.0</title>
       </Head>
@@ -94,7 +96,8 @@ export async function getStaticProps() {
   // initialize firebase in build to pull initial data
   firebaseInitialize()
   if (process.env.NODE_ENV === 'development') {
-    firebase.functions().useFunctionsEmulator('localhost:5001')
+    firebase.functions().useFunctionsEmulator('http://localhost:5000')
+    // firebase.functions().useFunctionsEmulator('http://localhost:5001')
   }
 
   const today = new Date()
